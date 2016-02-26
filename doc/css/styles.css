@@ -1,0 +1,49 @@
+body { background: #f5f5f5; color: black; font : 14px Verdana, Helvetica, Arial, sans-serif; font-weight:normal; }
+div.page { width: 1232px; padding: 2px; border: 1px dotted #cccccc; margin: 0 auto; text-align: left; font-size: 14px; }
+H1, H2, H3, H4, H5 { background-color: #99ffff; padding: 12px 50px; }
+input { font-size: 12px; }
+
+/* TABLES */
+table[border="0"] { padding: 0; border-spacing: 0;}
+table[border="0"] > tbody > tr > td { border: 0; padding: 0; border-spacing: 0; }
+table[border="1"] { border: solid 1px black; padding: 0; border-spacing: 0; border-collapse: collapse; }
+table[border="1"] > tbody > tr > td,
+table[border="1"] > thead > tr > td,
+table[border="1"] > thead > tr > th,
+table[border="1"] > tfoot > tr > td { border: solid 1px black; padding: 3px; border-spacing: 0; border-collapse: collapse; }
+
+/* CLICKABLE */
+.clickable { cursor: pointer; }
+a:link { color: #cc6600; text-decoration: none; }
+a:visited { color: #cc6600; text-decoration: none; }
+a:hover { color: #cc6600; text-decoration: underline; }
+
+/* highlighters */
+.selected { background-color: #ffff99; }
+.editable { text-decoration: underline; }
+.hidden { display: none; }
+
+
+div.pager { margin-bottom: .25em; }
+.center { text-align: center; }
+
+/* PAGE LAYOUT */
+/* PAGE LAYOUT - TWO COLUMN LAYOUT */
+div.menuLeft { width: 50%; float: left; border: 0; padding: 2px; margin: 10px 2px 0; }
+div.menuRight { width: 48%; float: right; border: 0; padding: 2px; margin: 10px 2px 0; }
+
+/* PAGE LAYOUT - THREE COLUMN LAYOUT */
+div.columnLeft { width: 30%; float: left; border: 0; padding: 2px; margin: 10px 0 0; }
+div.content { width: 69%; float: right; border: 0; margin-top: 10px; }
+div.columnMiddle { width: 42%; float: left; border: 0; padding: 2px; margin: 0; }
+div.columnRight { width: 56%; float: right; border: 0; padding: 2px; margin: 0; }
+
+/* PAGE LAYOUT - TWO COLUMN LAYOUT - CONTENT LEFT + EXTRA TO THE RIGHT */
+div.mainContent { width: 69%; float: left; border: 0; margin-top: 10px; }
+div.extraContent { width: 30%; float: left; border: 0; padding: 2px; margin: 10px 0 0; }
+
+/* COMMON FOR ALL PAGE LAYOUTS */
+div.footer { clear: both; }
+
+/* OTHER */
+div.section { padding: 0 0 5px; }

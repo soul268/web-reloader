@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+    <title>Replace frame which replaces its content of another frame when loaded</title>
+    <link rel="stylesheet" href="css/styles.css" type="text/css"/>
+    <script type="text/javascript" src='js/jquery-2.1.3.js'></script>
+
+    <script type="text/javascript" src='js/jquery.debugLogger.js'></script>
+    <script type="text/javascript">
+        if (typeof DEBUG_LOGGER === "object") {
+            DEBUG_LOGGER.init({remote_log: 0, log_level: 6});
+        }
+    </script>
+
+    <script type="text/javascript" src='js/web.reloader.js'></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            WEB_RELOADER.initModule(6);
+        });
+    </script>
+</head>
+<body>
+
+<h3>Replace frame which replaces its content of another frame when loaded</h3>
+
+
+<div class="r_frame" id="container1"></div>
+<div class="r_frame" id="container2"></div>
+
+<div class="r_frame r_load_me hidden" data-url="frame3.html"></div>
+
+
+</body>
+</html>

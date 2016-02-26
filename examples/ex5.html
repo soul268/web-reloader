@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+    <title>hyperlink inside frame. No ids, load on click</title>
+    <link rel="stylesheet" href="css/styles.css" type="text/css"/>
+    <script type="text/javascript" src='js/jquery-2.1.1.js'></script>
+
+    <script type="text/javascript" src='js/jquery.debugLogger.js'></script>
+    <script type="text/javascript">
+        if (typeof DEBUG_LOGGER === "object") {
+            DEBUG_LOGGER.init({remote_log: 0, log_level: 9});
+        }
+    </script>
+
+    <script type="text/javascript" src='js/web.reloader.js'></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            WEB_RELOADER.initModule();
+        });
+    </script>
+</head>
+<body>
+
+<h3>hyperlink inside frame. No ids, load on click</h3>
+
+<div class="r_frame">
+    <p><a href="frame1.html">load frame1 in container</a></p>
+    <p><a href="frame2.html">load frame2 in container (frame2 itself loads frame1)</a></p>
+</div>
+
+</body>
+</html>

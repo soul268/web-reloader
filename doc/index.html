@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>WebReloader Readme</title>
+
+    <link href="css/styles.css" rel="stylesheet" type="text/css"/>
+
+    <link href="styles/shCore.css" rel="stylesheet" type="text/css"/>
+    <link href="styles/shThemeDefault.css" rel="stylesheet" type="text/css"/>
+
+    <script src="js/shCore.js"></script>
+    <script src="js/shBrushJScript.js"></script>
+    <script src="js/shBrushXml.js"></script>
+    <script src="js/shBrushCss.js"></script>
+
+</head>
+<body>
+
+<div class="page">
+<h1>WebReloader Readme</h1>
+
+
+<div class="columnLeft">
+    <a name="toc"></a>
+    <h2>Table of content</h2>
+
+    <div class="section">
+        <ul>
+            <li><a href="#description">WebReloader Description</a></li>
+            <li><a href="#versions">Version history</a></li>
+            <li><a href="#elements">Webpage elements used by WebReloader</a></li>
+            <li>
+                <a href="#howtoadd">How to add WebReloader to a page and what happens when you do that</a>
+                <ul>
+                    <li><a href="#adding">Adding WebReloader to the page</a></li>
+                    <li><a href="#linkbehaviour">Link behaviour. Initial page load when WebRelaoder is on page</a></li>
+                    <li><a href="#skipframe">Link: Skip frame attribute</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#forms">Forms and WebReloader</a>
+                <ul>
+                    <li><a href="#forminframe">Form inside frame</a></li>
+                    <li><a href="#stealform">"Stealing" form button</a></li>
+                    <li><a href="#formredirect">Form result redirection to another frame</a></li>
+                    <li><a href="#formsubmit5">Form submit html5</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#commands">WebReloader Commands</a>
+                <ul>
+                    <li><a href="#frameReplace">Command: (1) frameReplace</a></li>
+                    <li><a href="#loadFrame">Command: (2) loadFrame</a></li>
+                    <li><a href="#execGroup">Command: (3) execGroup and late command groups</a></li>
+                    <li><a href="#execJS">Command: (4) execJS</a></li>
+                    <li><a href="#reloadFrame">Command: (5) reloadFrame</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#morefuncs">More functions of WebReloader</a>
+                <ul>
+                    <li><a href="#onloadframe">Onload frame callback</a></li>
+                    <li><a href="#globalonload">Global onload functions</a></li>
+                    <li><a href="#onerrorframe">Onerror frame callback</a></li>
+                    <li><a href="#globalonerror">Global onerror functions</a></li>
+                    <li><a href="#replacemyselftag">Replace Myself tags</a></li>
+                    <li><a href="#reloadframebyclass">Reload Frame By Class</a></li>
+                    <li><a href="#reloadframemethod">reloadFrame method</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="content">
+    <a name="description"></a>
+    <h2>WebReloader Description</h2>
+
+    <div class="section">
+        <p>WebReloader is JavaScript library that loads parts of web page via ajax.</p>
+
+        <p>
+            Page is loaded iteratively.
+            After each load passes page is scanned for additional loadable markup.<br>
+            This allows for cascade of content loading that itself can define html markup
+            for more content to load.
+        </p>
+
+        <p>
+            Web browser links and form submits <i>may be</i> handled differently by this library.<br>
+            Instead of browser transition to new page it is possible to load content in elements in current page instead.<br>
+            This depends of them being inside of r_frame and/or being annotated with data-frame="" (More below).<br>
+            Form submission can also be transformed into ajax posts and result placed by the library.
+        </p>
+    </div>
+
+    <a name="versions"></a>
+    <h2>Version history (newest first)</h2>
+
+    <div class="section">
+
+        <ul>
+            <li><b>v 1.0.14</b> 2016-02-17 - feature: method reloadFrame - reloads frame from last url</li>
+            <li><b>v 1.0.13</b> 2016-02-12 - feature: link(a) skip-frame - load link to n-th parent frame; add ToC to documentation</li>
+            <li><b>v 1.0.12</b> 2016-01-27 - fix: remove dependency on id for loading A in containing frame</li>
+            <li><b>v 1.0.11</b> 2016-01-15 - new command: reloadFrame - reloads frame from url used in the previous load</li>
+            <li><b>v 1.0.9</b> 2016-01-06 - new: add global and per-frame onerror functions; fix default url on ajax form posts left from testing</li>
+            <li><b>v 1.0.8</b> 2015-12-10 - change: remove requirement r_frame to be div-element</li>
+            <li><b>v 1.0.7</b> 4.11.2015 - change: start to using namespaced jQuery events in plugin to avoid conflicts with other event handlers</li>
+            <li><b>v 1.0.6</b> 5.5.2015 - feature: use FormData in conforming browsers/still support old browsers</li>
+            <li><b>v 1.0.5</b> 19.3.2015 - remove dependency on DEBUG_LOGGER</li>
+            <li><b>v 1.0.4</b> 17.3.2015 - Add file upload support</li>
+        </ul>
+    </div>
+</div>
+
+<div class="footer"></div>
+
+
+<a name="elements"></a>
+<h3>Webpage elements used by WebReloader</h3>
+
+<h5>r_frame</h5>
+
+<div class="section">
+    <p>Base webpage elements for WebReloader functions are r_frames.</p>
+    <ul>
+        <li>It can be loaded via ajax.</li>
+        <li>Link in r_frame is loaded to the same (or optionally different) r_frame by WebReloader (not openned in new
+            page).
+        </li>
+        <li>Form inside a r_frame is submitted and the result is loaded back into the r_frame instead of new page.</li>
+    </ul>
+    <p>Frames are declared using marker class.</p>
+
+    <p>Most basic frame definition looks like this:</p>
+    <script type="syntaxhighlighter" class="brush: html"><![CDATA[
+        <div class="r_frame">
+        </div>
+        ]]>
+
+    </script>
+    <ul>
+        <li><i>r_frame</i> - marker class for a r_frame.</li>
+    </ul>
+
+    This is more useful frame definition:
+    <script type="syntaxhighlighter" class="brush: html"><![CDATA[
+        <div class="r_frame r_load_me" data-url="frame1.html">
+        </div>
+        ]]>
+
+    </script>
+    <ul>
+        <li>
+            <p><i>r_load_me</i> - marker class for frame that must be loaded on next loader pass.</p>
+
+            <p><b>This class is REMOVED</b> after load operation is completed.</p>
+        </li>
+        <li>
+            <i>data-url</i> - data attribute contains url to be loaded to frame.
+            <p><b>This data is NOT REMOVED.</b></p>
+
+            <p>It can be used for reloading last url in r_frame. By adding <i>r_load_me</i> class and calling loadFrames()</p>
+        </li>
+    </ul>
+
+</div>
+
+<h5>Link (located anywhere on page) redirected to frame</h5>
+
+<div class="section">
+    <p>Link anywhere on page can be declared to load into r_frame instead of triggering page change.</p>
+    <script type="syntaxhighlighter" class="brush: html"><![CDATA[
+            <a href="frame1.html" data-frame="container">load frame1 in container</a>
+
+            <div class="r_frame" id="container"></div>
+        ]]>
+
+    </script>
+    <ul>
+        <li>
+            <p>data-frame="<i>container</i>" - links target(href) is loaded in frame with this id.</p>
+        </li>
+    </ul>
+</div>
+
+<h5>Automatic capture of link behavior inside r_frame</h5>
+
+<div class="section">
+    <p>Inside a r_frame normal link behaviour is replaced with ajax call for link's href which is loaded into same
+        r_frame.</p>
+    <script type="syntaxhighlighter" class="brush: html"><![CDATA[
+            <div class="r_frame">
+                <a href="action.cgi?p=5">load action FIVE in current frame</a>
+            </div>
+        ]]>
+
+    </script>
+    <ul>
+        <li>
+            <p>Notice that link is not marked and frame has no id to distinguish it as destination.</p>
+
+            <p>Just placing link inside r_frame changes it behaviour.</p>
+
+            <p>Link loads into containing r_frame - no additional markers required.</p>
+        </li>
+    </ul>
+</div>
+<a href="#toc">TOC</a>
+
+<a name="howtoadd"></a>
+<h3>How to add WebReloader to a page and what happens when you do that</h3>
+
+<a href="#toc">TOC</a>
+
+<a name="adding"></a>
+
+<h5>Adding WebReloader to the page</h5>
+
+<ol>
+    <li>
+        <p>Add WebReloader javascript file to header of page:</p>
+        <script type="syntaxhighlighter" class="brush: html"><![CDATA[
+            <html>
+                <head>
+                    <script type="text/javascript" src='js/jquery-2.1.1.js'>&lt;/script>
+                    <script type="text/javascript" src='js/web.reloader.js'>&lt;/script>
+                </head>
+                ...
+            ]]>
+
+        </script>
+        <p>WebReloader uses jQuery which is being added here too.</p>
+    </li>
+    <li>
+        <p>Add call to initModule() function of WebReloader module before the <i>closing</i> body tag
+            of the document.</p>
+        <script type="syntaxhighlighter" class="brush: html"><![CDATA[
+            <script type="text/javascript">
+                WEB_RELOADER.initModule();
+            &lt;/script>
+            ]]>
+
+        </script>
+        <p>The other way around is to do this function call in header of page with jQuery when page is ready.</p>
+        <script type="syntaxhighlighter" class="brush: html"><![CDATA[
+            <html>
+                <head>
+                    <script type="text/javascript" src='js/jquery-2.1.1.js'>&lt;/script>
+                    <script type="text/javascript" src='js/web.reloader.js'>&lt;/script>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            WEB_RELOADER.initModule();
+                        });
+                    &lt;/script>
+
+                </head>
+                ...
+            ]]>
+
+        </script>
+    </li>
+    <li>IMPORTANT FOR PRODUCTION: The parameter for initModule defines debug level for WEB_RELOADER. For production use 0.</li>
+</ol>
+
+<a href="#toc">TOC</a>
+
+<a name="linkbehaviour"></a>
+
+<h5>Link behaviour. Initial page load when WebRelaoder is on page (call to WEB_RELOADER.initModule();)</h5>
+
+<ol>
+    <li>
+        <p>After Page is loaded all existing links behaviour is changed by following rules:</p>
+
+        <p></p>
+        <table border="1">
+            <thead>
+            <tr>
+                <td>Link had data-frame attribute set</td>
+                <td>Link is inside a r_frame</td>
+                <td>Link behaviour</td>
+                <td>CASE (see tests.js)</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="center">
+                <td class="bld red">YES</td>
+                <td>NO</td>
+                <td class="red left">Link's href location is loaded in r_frame with id specified by data-frame</td>
+                <td>CASE 5</td>
+            </tr>
+            <tr class="center">
+                <td class="bld red">YES</td>
+                <td>YES</td>
+                <td class="left">
+                    <p class="red">Link's href location is loaded in r_frame with id specified by data-frame</p>
+
+                    <p>
+                        Link's with data-frame equal to <i>window</i>
+                        is left alone by WebReloader's click callback and link is behaving normally.
+                        This is the way to make links to another page inside r_frame.
+                    </p>
+                </td>
+                <td>
+                    <p>CASE 4</p>
+                    <p>CASE 2</p>
+                </td>
+            </tr>
+            <tr class="center">
+                <td>NO</td>
+                <td>NO</td>
+                <td class="left">Link is left alone by WebReloader - it does a normal page change when clicked.</td>
+                <td>CASE 1</td>
+            </tr>
+            <tr class="center">
+                <td>NO</td>
+                <td>YES</td>
+                <td class="left">
+                    <p>Link's href location is loaded in r_frame in which it is located.</p>
+                </td>
+                <td>CASE 3</td>
+            </tr>
+            </tbody>
+        </table>
+
+    </li>
+    <li>
+        <p>Iteractive loading of frames is started by calling WEB_RELOADER.loadFrames();</p>
+
+        <p>To be loaded r_frame must have two things</p>
+        <ol>
+            <li>Attribute <i>data-url</i> which value is the location to be loaded.</li>
+            <li>Be marked with class <i>r_load_me</i> (which is <b>removed</b> afer frame is loaded).</li>
+        </ol>
+        <p>Each loaded page fragment may contain other r_frames prepared to be loaded on next iteration of loader.</p>
+
+        <p>A check for more frames to load is made after all ajax request are done loading in current queue</p>
+
+        <p>It's possible to change (e.g. add classes to frames with JavaScript) in onload callbacks before next
+            iteration starts. (see following section)</p>
+
+        <p>Something similar is being done internally in link click handler code:</p>
+        <p>
+            <pre class="brush: js">
+                $frame.addClass(configMap.frameLoadClass);
+                $frame.data('url', a_href);
+                loadFrames();
+            </pre>
+        </p>
+
+
+        <p><b>Iteration</b> (calling WEB_RELOADER.loadFrames();) <b>ends</b> when there are no more frames on page that
+            need to be loaded.</p>
+    </li>
+</ol>
+
+<a href="#toc">TOC</a>
+
+
+<a name="skipframe"></a>
+
+<div class="section">
+
+    <h5>Link: Skip frame attribute</h5>
+
+    <script type="syntaxhighlighter" class="brush: html"><![CDATA[
+            <div class="r_frame">
+                <div class="r_frame"><!-- link will load here instead -->
+                    <div class="r_frame"><!-- link will not load here -->
+                        <a href="frame1.html" data-skip-frame="1">skip-frame=1 link</a>
+                    </div>
+                </div>
+            </div>
+            ]]>
+    </script>
+
+    <p><i>data-skip-frame</i> determines how much parent frames to skip when determining the target to load link.</p>
+
+    <p>If count exceeds available parent frames link is loaded in window.</p>
+
+</div>
+
+<a href="#toc">TOC</a>
+
+<a name="forms"></a>
+
+<h3>Forms and WebReloader</h3>
+
+<a href="#toc">TOC</a>
+
+<a name="forminframe"></a>
+
+<h5>Form inside frame</h5>
+
+<div class="section">
+
+    <ol>
+        <li>
+            <p>
+                If form is inside r_frame WEB_RELOADER is taking over its serialization and submit.
+            </p>
+        </li>
+        <li>
+            <p>
+                Form controls are serialized and submited using ajax post and response is loaded
+                back into same frame.
+            </p>
+        </li>
+        <li>
+            <p>
+                URL used to post to is form action attribute (if present) or current page url.
+            </p>
+        </li>
+        <li>
+            <p>
+                When one of submit controls on form is clicked by user a java script code is executed.
+            </p>
+
+            <p>
+                This java script code submits the form (not the actual button) therefore
+                the name of the button is not included in parameters send to server.
+                (The form can actually be submitted by outside event triggering the submit,
+                not by one of form buttons.)
+            </p>
+
+            <p>
+                In order to make this button available on the server:
+            </p>
+
+            <p>
+                All forms intended to be used with WEB_RELOADER can provide <b>hidden input</b> named
+                <i>button_name</i>
+                which is set to the name of control clicked by user.
+                If this input is not present in the form it is added in ajax post by WEB_RELOADER.
+            </p>
+
+            <script type="syntaxhighlighter" class="brush: html"><![CDATA[
+                <form data-frame="container" name="test_form" action="test_form.cgi" method="post">
+                    <p>Name: <input name="name" value="" type="text"></p>
+                    <p><input name="gopher" src="img/gopher_icon_128.png" alt="Gopher" type="image"></p>
+                    <p><input name="Submit" value="Submit" type="submit"></p>
+                    <input name="button_name" type="hidden">
+                </form>
+                ]]>
+            </script>
+        </li>
+    </ol>
+
+</div>
+
+<a href="#toc">TOC</a>
+
+<a name="stealform"></a>
+
+<h5>"Stealing" form button</h5>
+
+<div class="section">
+    <p>One button of the form can be made to function independently of the form as link</p>
+    <p>
+        If an image or button in the form has set <pre>data-frame="FRAME_ID"</pre>
+        <b>and</b> <pre>data-url="URL"</pre> it functions as link.
+    </p>
+    <p>The original form may not be in r_frame at all.</p>
+
+    <script type="syntaxhighlighter" class="brush: html"><![CDATA[
+            <form name='test_form' action='test_form.cgi' method='post' data-frame="container" >
+                <p>Name: <input type='text' name='name' value=''></p>
+                <p>Image: <input name='gopher' type='image' src='img/gopher_icon_128.png' alt='Gopher'></p>
+                <p><input name='Submit' type='submit' value='Submit' class='ok'></p>
+                <p>THIS BUTTON IS LOADED AS LINK IN FRAME #extra:<input name='ExternalCommand' type='submit' value='ExternalCommand' class='ok' data-frame="extra" data-url="frame1.html"></p>
+                <input type='hidden' name='button_name'>
+            </form>
+
+            <div class="r_frame" id="extra">LINK IS LOADED HERE</div>
+        ]]>
+    </script>
+</div>
+
+<a href="#toc">TOC</a>
+
+<a name="formredirect"></a>
+
+<h5>Form result redirection to another frame</h5>
+
+<div class="section">
+    <p>If a form has set <pre>data-frame="container"</pre> result of post is loaded in frame with that id instead of current frame.</p>
+    <p>The original form may not be in r_frame at all.</p>
+
+    <script type="syntaxhighlighter" class="brush: html"><![CDATA[
+        <form name="test_form" action="test_form.cgi" method="post" data-frame="container">
+            <p>Name: <input name="name" value="" type="text"></p>
+            <p>Image: <input name="gopher" src="img/gopher_icon_128.png" alt="Gopher" type="image"></p>
+            <p><input name="Submit" value="Submit" class="ok" type="submit"></p>
+            <input value="Submit" name="button_name" type="hidden">
+        </form>
+
+        <div id="container" class="r_frame"></div>
+        ]]>
+    </script>
+</div>
+
+<a href="#toc">TOC</a>
+
+<a name="formsubmit5"></a>
+
+<h5>Form submit html5 - form elements selected by form='form_id'</h5>
+
+<div class="section">
+    <p>Selecting form inputs to be send via ajax not on basis of position inside the form tag but with property form='form_id'</p>
+
+    <script type="syntaxhighlighter" class="brush: html"><![CDATA[
+        <div class='r_frame' id='container'>
+            <form name='test_form' action='post_echo.cgi' method='post' id='form_id'>
+            </form>
+            <select name='single' id='select1' form='form_id'>
+                <option>Single</option>
+                <option>Single2</option>
+            </select>
+            <br>
+            <select name='multiple' multiple='multiple' id='select2' form='form_id'>
+                <option selected='selected'>Multiple</option>
+                <option>Multiple2</option>
+                <option selected='selected'>Multiple3</option>
+            </select>
+            <br>
+            <input type='checkbox' name='check' value='check1' id='ch1' form='form_id'>
+            <label for='ch1'>check1</label>
+            <input type='checkbox' name='check' value='check2' checked='checked' id='ch2' form='form_id'>
+            <label for='ch2'>check2</label>
+            <br>
+            <input type='radio' name='radio' value='radio1' checked='checked' id='r1' form='form_id'>
+            <label for='r1'>radio1</label>
+            <input type='radio' name='radio' value='radio2' id='r2' form='form_id'>
+            <label for='r2'>radio2</label>
+            <input type='hidden' name='hidden_test' value='50' form='form_id'>
+            <p><input name='Submit' type='submit' value='Submit' class='ok' form='form_id'></p>
+        </div>
+        ]]>
+    </script>
+
+    <p>Useful for forms spanning large pages that may intersect with other forms loaded later.</p>
+</div>
+
+<a href="#toc">TOC</a>
+
+<a name="commands"></a>
+
+<h3>WebReloader Commands</h3>
+
+<div class="section">
+
+    <h5>Command intent</h5>
+    <p>Commands are mechanism for extending WEB_RELOADER's functionality.</p>
+
+    <h5>What is Command</h5>
+    <p>A div having</p>
+    <ul>
+        <li>class <i>r_frame_command</i> (or class <i>r_frame_late_command</i> see below)</li>
+        <li><i>data-name</i> attribute specifying the name of the command.</li>
+    </ul>
+    <p>
+        <b>Commands' divs</b> are removed from DOM after execution.
+    </p>
+    <p>
+        <b>All commands</b> must be executed before next iterative call to loadFrames().
+    </p>
+
+    <h5>Command usage</h5>
+    <p>Any command can be used</p>
+    <ul>
+        <li>Send from server with r_frame</li>
+        <li>Activated as late command</li>
+    </ul>
+
+    <h5>Example commands</h5>
+    <script type="syntaxhighlighter" class="brush: html"><![CDATA[
+        <!-- (1) frameReplace -->
+        <div class="r_frame_command" data-name="frameReplace"></div>
+
+        <!-- (2) loadFrame -->
+        <div class="r_frame_command" data-name="loadFrame"></div>
+
+        <!-- (3) execGroup -->
+        <!-- see Command: execGroup and late command groups -->
+        <div class="r_frame_command" data-name="execGroup" data-value="g1"></div>
+
+        <!-- (4) execJS -->
+        <div class="r_frame_command" data-name="execJS" data-function="reload_window"></div>
+
+        <!-- (5) reloadFrame -->
+        <div class="r_frame_command" data-name="reloadFrame"></div>
+        ]]>
+    </script>
+
+    <h5>Nesting</h5>
+    <p>
+        <b>Nested commands</b> are executed after parent commands.
+        E.g. commands in frameReplace fragments are executed after they are moved to their target frames.
+    </p>
+
+    <ol>
+        <li>
+            <p>Step 1: Initial load.</p>
+            <script type="syntaxhighlighter" class="brush: html"><![CDATA[
+                <div class="r_frame" id="mainLoadedFrameId">
+                    Other content...
+                    <div class="r_frame_command" data-name="frameReplace" data-frame="anotherFrameId">
+                        This content will replace content of frame with id anotherFrameId.
+                        <div class="r_frame_command" data-name="loadFrame" data-url="action.cgi"></div>
+                        After that this div will be removed.
+                    </div>
+                </div>
+
+                <div class="r_frame" id="anotherFrameId"></div>
+                ]]>
+            </script>
+        </li>
+        <li>
+            <p>Step 2: after frameReplace</p>
+            <script type="syntaxhighlighter" class="brush: html"><![CDATA[
+                <div class="r_frame" id="mainLoadedFrameId">
+                    Other content...
+                </div>
+
+                <div class="r_frame" id="anotherFrameId">
+                    This content will replace content of frame with id anotherFrameId.
+                    <div class="r_frame_command" data-name="loadFrame" data-url="action.cgi"></div>
+                    After that this div will be removed.
+                </div>
+                ]]>
+            </script>
+        </li>
+        <li>
+            <p>Step 2: after loadFrame command</p>
+            <script type="syntaxhighlighter" class="brush: html"><![CDATA[
+                <div class="r_frame" id="mainLoadedFrameId">
+                    Other content...
+                </div>
+
+                <div class="r_frame r_load_me" data-url="action.cgi" id="anotherFrameId">
+                    This content will replace content of frame with id anotherFrameId.
+                    After that this div will be removed.
+                </div>
+                ]]>
+            </script>
+        </li>
+        <li>
+            <p>Step 2: after next loadFrames() pass</p>
+            <script type="syntaxhighlighter" class="brush: html"><![CDATA[
+                <div class="r_frame" id="mainLoadedFrameId">
+                    Other content...
+                </div>
+
+                <div class="r_frame" id="anotherFrameId">
+                    This content is received from server with call to action.cgi url.
+                </div>
+                ]]>
+            </script>
+        </li>
+    </ol>
+
+</div>
+
+<a href="#toc">TOC</a>
+
+<a name="frameReplace"></a>
+
+<h5>Command: (1) frameReplace</h5>
+
+<div class="section">
+    <p>Use Case:</p>
+    <ul>
+        <li>One r_frame is loaded via link or initial page load.</li>
+        <li>
+            Loaded content includes command with <i>data-name="frameReplace"</i> and <i>data-frame="anotherFrameId"</i>.
+        </li>
+        <li>
+            Content of the command div replaces content of corresponding frame(s) and is removed from r_frame in
+            which arrives on page.
+        </li>
+    </ul>
+    <p>This way we can deliver several page fragments to different frames with only one request to server.</p>
+
+    <p>Example:</p>
+    <ol>
+        <li>
+            <p>Before:</p>
+            <script type="syntaxhighlighter" class="brush: html"><![CDATA[
+                <div class="r_frame" id="mainFrameId">
+                    Other content...
+                    <div class="r_frame_command" data-name="frameReplace" data-frame="anotherFrameId">
+                        This content will replace content of frame with id anotherFrameId.
+                        After that this div will be removed.
+                    </div>
+                </div>
+
+                <div class="r_frame" id="anotherFrameId"></div>
+                ]]>
+            </script>
+        </li>
+        <li>
+            <p>After:</p>
+            <script type="syntaxhighlighter" class="brush: html"><![CDATA[
+                <div class="r_frame" id="mainFrameId">
+                    Other content...
+                </div>
+
+                <div class="r_frame" id="anotherFrameId">
+                    This content will replace content of frame with id anotherFrameId.
+                    After that this div will be removed.
+                </div>
+                ]]>
+            </script>
+        </li>
+    </ol>
+
+</div>
+
+<a href="#toc">TOC</a>
+
+<a name="loadFrame"></a>
+
+<h5>Command: (2) loadFrame</h5>
+
+<div class="section">
+
+    <p>Use Case:</p>
+    <ul>
+        <li>One r_frame is loaded via link or initial page load.</li>
+        <li>Loaded content includes loadFrame command with three attributes
+            <ol>
+                 <li><i>data-name="loadFrame"</i> name of the command.</li>
+                 <li><b>Optional</b> <i>data-frame="anotherFrameId"</i> If missing current frame is loaded</li>
+                 <li><i>data-url="sourceUrl"</i> set r-frame to be loaded</li>
+            </ol>
+        </li>
+        <li>
+            <p>With this command server triggers another frame to load itself with second request.</p>
+        </li>
+    </ul>
+
+    <p>Example:</p>
+    <script type="syntaxhighlighter" class="brush: html"><![CDATA[
+            <!-- without data-frame (optional) - command is loading content into current frame -->
+            <div class="r_frame_command" data-name="loadFrame" data-url="action.cgi"></div>
+
+            <!-- with data-frame -->
+            <div class="r_frame_command" data-name="loadFrame" data-url="action.cgi" data-frame="anotherFrameId"></div>
+
+            <div class="r_frame" id="anotherFrameId"></div>
+
+            <!-- with data-frame='window' - url is set on document.location - new browser page -->
+            <div class="r_frame_command" data-name="loadFrame" data-url="action.cgi" data-frame="window"></div>
+        ]]>
+    </script>
+</div>
+
+
+<a href="#toc">TOC</a>
+
+<a name="execGroup"></a>
+
+<h5>Command: (3) execGroup and late command groups</h5>
+
+<div class="section">
+
+    <p>Notes:</p>
+    <ul>
+        <li><b>Late command</b>
+            <ul>
+                <li>
+                    Is <b>div</b> with
+                    <ul>
+                        <li><b><i>class</i>="r_frame_late_command"</b> (instead <b>r_frame_command</b>)</li>
+                        <li><b><i>data-group</i>="group_name"</b></li>
+                        <li>has all other attributes of some regular r_frame_command</li>
+                    </ul>
+                </li>
+                <li>It IS NOT executed automatically.</li>
+                <li>It IS NOT removed automatically.</li>
+            </ul>
+        </li>
+        <li>
+            <b>execGroup command</b> is
+            <ul>
+                <li>Is <b>div</b> which has <b><i>data-value="g1"</i></b>.</li>
+                <ul>
+                    <li>The value of execGroup specifies a set ot late commands (they have <b><i>data-group="g1"</i></b>)</li>
+                    <li>These commands are executed by execGroup command</li>
+                </ul>
+                <li>It is removed after it is executed (like all other commands)</li>
+            </ul>
+        </li>
+    </ul>
+
+
+    <p>Example:</p>
+    <script type="syntaxhighlighter" class="brush: html"><![CDATA[
+            <div class="r_frame" id="container"></div>
+
+            <div class="r_frame_late_command" data-group="g1" data-name="loadFrame" data-url="frame1.html" data-frame="container"></div>
+
+            <div class="r_frame_command" data-name="execGroup" data-value="g1"></div>
+        ]]>
+    </script>
+
+</div>
+
+<a href="#toc">TOC</a>
+
+<a name="execJS"></a>
+
+<h5>Command: (4) execJS</h5>
+
+<div class="section">
+    <p>execJS executes global function with name specified by <i>data-function</i></p>
+    <p>Example:</p>
+    <script type="syntaxhighlighter" class="brush: html"><![CDATA[
+        <div class="r_frame_command" data-name="execJS" data-function="reload_window"></div>
+        ]]>
+    </script>
+</div>
+
+<a href="#toc">TOC</a>
+
+<a name="reloadFrame"></a>
+
+<h5>Command: (5) reloadFrame</h5>
+
+<div class="section">
+
+    <p>Use Case:</p>
+    <ul>
+        <li>Reload frame content from url used in the previous load.</li>
+        <li>reloadFrame command has two attributes
+            <ol>
+                <li><i>data-name="reloadFrame"</i> name of the command.</li>
+                <li><b>Optional</b> <i>data-frame="anotherFrameId"</i> If missing current frame is reloaded</li>
+            </ol>
+        </li>
+        <li>
+            <p>Can be useful as late command to reload frame on some events</p>
+        </li>
+    </ul>
+
+    <p>Example:</p>
+    <script type="syntaxhighlighter" class="brush: html"><![CDATA[
+        <!-- without data-frame (it is optional) - command is reloading the frame which contains it -->
+        <div class="r_frame_command" data-name="reloadFrame"></div>
+
+        <!-- with data-frame -->
+        <div class="r_frame_command" data-name="reloadFrame" data-frame="anotherFrameId"></div>
+
+        <div class="r_frame" id="anotherFrameId"></div><!-- destination frame -->
+    ]]>
+</script>
+</div>
+
+<a href="#toc">TOC</a>
+
+<a name="morefuncs"></a>
+
+<h3>More functions of WebReloader</h3>
+
+<a href="#toc">TOC</a>
+
+<a name="onloadframe"></a>
+
+<h5>Onload frame callback</h5>
+
+<div class="section">
+    <p>Onload function is executed when r_frame load is done.</p>
+
+    <p>Function must be defined as property on WEB_RELOADER.onload.</p>
+
+    <p>Example:</p>
+
+    <ol>
+        <li>
+            <p>Define function:</p>
+            <p>
+                <pre class="brush: js">
+                WEB_RELOADER.onload.example_test_callback = function($frame) {
+                    // do something after frame is loaded ...
+                    // $frame is jQuery wrapped set containing load destination frame
+                }
+                </pre>
+            </p>
+        </li>
+        <li>
+            <p>Set data-onload atribute on r_frame</p>
+            <p>
+                <script type="syntaxhighlighter" class="brush: html"><![CDATA[
+                    <div class="r_frame" data-onload="example_test_callback">
+                        After this frame is loaded example_rest_callback() is called.
+                    </div>
+                    ]]>
+                </script>
+            </p>
+        </li>
+    </ol>
+</div>
+
+<a href="#toc">TOC</a>
+
+<a name="globalonload"></a>
+
+<h5>Global onload functions</h5>
+
+<div class="section">
+    <p>Global onload function(s) execute after each frame load for all frames.</p>
+
+    <p>Function(s) must be defined in WEB_RELOADER.global_onload namespace.</p>
+
+    <p>Example:</p>
+
+    <ol>
+        <li>
+            <p>Define function:</p>
+            <p>
+                <pre class="brush: js">
+                WEB_RELOADER.global_onload.global_test_callback = function ($frame) {
+                    // do something after each frame on page is loaded ...
+                    // $frame is jQuery wrapped set containing load destination frame
+                };
+                </pre>
+            </p>
+        </li>
+    </ol>
+</div>
+
+<a href="#toc">TOC</a>
+
+<a name="onerrorframe"></a>
+
+<h5>Onerror frame callback</h5>
+
+<div class="section">
+    <p>Onerror function is executed when r_frame load has failed.</p>
+
+    <p>Function must be defined as property on WEB_RELOADER.onerror.</p>
+
+    <p>Example:</p>
+
+    <ol>
+        <li>
+            <p>Define function:</p>
+            <p>
+            <pre class="brush: js">
+            WEB_RELOADER.onerror.my_onerror = function ($frame, errMsg) {
+              if (typeof $frame === 'object') {
+                $frame.html(errMsg);
+              }
+            };
+            </pre>
+            </p>
+        </li>
+        <li>
+            <p>Set data-onerror atribute on r_frame</p>
+            <p>
+                <script type="syntaxhighlighter" class="brush: html"><![CDATA[
+                <div class="r_frame" data-onerror="my_onerror">
+                    When this frame fails to load my_onerror is called.
+                </div>
+                ]]>
+            </script>
+            </p>
+        </li>
+    </ol>
+</div>
+
+<a href="#toc">TOC</a>
+
+<a name="globalonerror"></a>
+
+<h5>Global onerror functions</h5>
+
+<div class="section">
+    <p>Global onerror function(s) execute when any frame load fails.</p>
+
+    <p>Function(s) must be defined in WEB_RELOADER.global_onerror namespace.</p>
+
+    <p>Example:</p>
+
+    <ol>
+        <li>
+            <p>Define function:</p>
+            <p>
+            <pre class="brush: js">
+            WEB_RELOADER.global_onerror.default_onerror = function ($frame, errMsg) {
+              "use strict";
+              if (typeof $frame === 'object') {
+                $frame.html(errMsg);
+              }
+            };
+            </pre>
+            </p>
+        </li>
+    </ol>
+</div>
+
+<a href="#toc">TOC</a>
+
+<a name="replacemyselftag"></a>
+
+<h5>Replace Myself tags</h5>
+
+<div class="section">
+    <p>Tags that are clickable and replace themselves with the result of request.</p>
+    <p>Example definition - changing images with server requests:</p>
+
+    <ol>
+        <li>
+            <p>Define a img tag:</p>
+            <p>
+                <script type="syntaxhighlighter" class="brush: html"><![CDATA[
+                    <img class="r_replace_myself" src="img/sush.png" data-url="frag.cgi?action=gopher">
+                    ]]>
+                </script>
+            </p>
+            <p>To do this tag must have <i>class="r_replace_myself"</i> <b>and</b> attribute <i>data-url="..."</i> with request url.</p>
+        </li>
+        <li>
+            <p>If server response to this click is:</p>
+            <p>
+                <script type="syntaxhighlighter" class="brush: html"><![CDATA[
+                    <img class="r_replace_myself" src="img/gopher.png" data-url="frag.cgi?action=sush">
+                    ]]>
+                </script>
+            </p>
+            <p>... we can have image that flips-flops on each click</p>
+        </li>
+    </ol>
+    <p>Any html tag can be used - not only img.</p>
+    <p>Css can be used to style element to look like something clickable (link, button etc.):</p>
+    <script type="syntaxhighlighter" class="brush: css"><![CDATA[
+        .r_replace_myself {
+            color: #cc6600;
+            cursor: pointer;
+        }
+
+        .r_replace_myself:hover {
+            color: #cc6600;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        ]]>
+    </script>
+</div>
+
+<a href="#toc">TOC</a>
+
+<a name="reloadframebyclass"></a>
+
+<h5>Reload Frame By Class</h5>
+
+<div class="section">
+    <p>Loading of one frame triggers reload of all frames marked by specific class</p>
+
+    <p>Example:</p>
+    <script type="syntaxhighlighter" class="brush: html"><![CDATA[
+      <!-- 'master' frame -->
+      '<div class="r_frame r_load_me" id="src_id" data-url="frame1.html" data-reload-by-class="markerClass"></div>' +
+
+      <!-- one of more 'slave' frames - reloaded on 'master' load -->
+      '<div class="r_frame markerClass" id="dst_id" data-url="frag002.html"></div>'
+    ]]>
+    </script>
+
+
+    <ol>
+        <li>
+            When frame with <b>data-reload-by-class="someClass"</b> is loaded...
+        </li>
+        <li>
+            All frames which have this class are reloaded using last url.
+        </li>
+    </ol>
+</div>
+
+<a href="#toc">TOC</a>
+
+<a name="reloadframemethod"></a>
+
+<h5>reloadFrame method</h5>
+
+<div class="section">
+    <p>Method WEB_RELOADED.reloadFrame(frameId) reloads the frame from the last used url</p>
+
+    <p>Example:</p>
+    <script type="syntaxhighlighter" class="brush: html"><![CDATA[
+      <div class="r_frame" id="frameId" data-url="frame1.html"></div>
+    ]]>
+    </script>
+
+    <pre class="brush: js">
+        WEB_RELOADED.reloadFrame(frameId)
+    </pre>
+
+</div>
+
+
+
+
+
+<script>
+    SyntaxHighlighter.all();
+</script>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+    <title>Form controls</title>
+
+    <link rel="stylesheet" href="css/styles.css" type="text/css"/>
+
+    <!--<script src='js/jquery-2.1.1.js'></script>-->
+    <script src='js/jquery-1.11.1.js'></script>
+
+    <script type="text/javascript" src='js/jquery.debugLogger.js'></script>
+    <script type="text/javascript">
+        if (typeof DEBUG_LOGGER === "object") {
+            DEBUG_LOGGER.init({remote_log: 0, log_level: 6});
+        }
+    </script>
+
+    <script src='js/web.reloader.js'></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            WEB_RELOADER.initModule();
+        });
+    </script>
+</head>
+
+<body>
+
+<H1>Form controls</H1>
+
+<p>inside #container: test_form #tf1</p>
+
+<div class="r_frame" id="container">
+
+    <form name='test_form' action='post_echo.cgi' method='post' id="tf1">
+    </form>
+
+        <select name="single" form="tf1">
+            <option>Single</option>
+            <option>Single2</option>
+            <option selected>Single3*</option>
+        </select>
+        <br>
+        <select name="multiple" multiple="multiple" form="tf1">
+            <option>Multiple</option>
+            <option>Multiple2</option>
+            <option selected="selected">Multiple3*</option>
+        </select>
+        <br>
+        <input type="checkbox" name="check" value="check1" id="ch1" form="tf1">
+        <label for="ch1">check1</label>
+        <input type="checkbox" name="check" value="check2" id="ch2" form="tf1">
+        <label for="ch2">check2</label>
+        <input type="checkbox" name="check" value="check3" checked="checked" id="ch3" form="tf1">
+        <label for="ch2">check3*</label>
+        <br>
+        <input type="radio" name="radio" value="radio1" id="r1" form="tf1">
+        <label for="r1">radio1</label>
+        <input type="radio" name="radio" value="radio2" id="r2" form="tf1">
+        <label for="r2">radio2</label>
+        <input type="radio" name="radio" value="radio3" checked="checked" id="r3" form="tf1">
+        <label for="r3">radio3*</label>
+
+        <p><input name='Submit' type='submit' value='Submit' class='ok' form="tf1"></p>
+
+</div>
+
+<p>Outside container: test_form2 #tf2</p>
+
+<form name='test_form2' action='post_echo.cgi' method='post' id="tf2">
+</form>
+
+<select name="single" form="tf2">
+    <option>Single</option>
+    <option>Single2</option>
+    <option selected>Single3*</option>
+</select>
+<br>
+<select name="multiple" multiple="multiple" form="tf2">
+    <option>Multiple</option>
+    <option>Multiple2</option>
+    <option selected="selected">Multiple3*</option>
+</select>
+<br>
+<input type="checkbox" name="check" value="check1" id="ch1" form="tf2">
+<label for="ch1">check1</label>
+<input type="checkbox" name="check" value="check2" id="ch2" form="tf2">
+<label for="ch2">check2</label>
+<input type="checkbox" name="check" value="check3" checked="checked" id="ch3" form="tf2">
+<label for="ch2">check3*</label>
+<br>
+<input type="radio" name="radio" value="radio1" id="r1" form="tf2">
+<label for="r1">radio1</label>
+<input type="radio" name="radio" value="radio2" id="r2" form="tf2">
+<label for="r2">radio2</label>
+<input type="radio" name="radio" value="radio3" checked="checked" id="r3" form="tf2">
+<label for="r3">radio3*</label>
+
+<p><input name='Submit' type='submit' value='Submit' class='ok' form="tf2"></p>
+
+<H3>Tests must be run on webserver!!!</H3>
+
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+    <title>Try Form Data</title>
+    <meta charset="utf-8">
+
+    <script src='js/jquery-2.1.3.js'></script>
+</head>
+<body>
+
+<H3>Try Form Data</H3>
+
+<H3>Form file upload - without WEB_RELOADER - ajax submit</H3>
+
+<div id="output"></div>
+
+<p>FORM0 / #form0</p>
+
+<form name='post_echo0' action='post_echo.cgi' method='post' enctype='multipart/form-data' id="form0">
+    <p>File: <input type="file" name="fileToUpload0" id="fileToUpload0"></p>
+
+    <p>Name: <input type='text' name='name0'/></p>
+
+    <p><input name='Submit' type='submit' value='Submit' class='ok' id="submit0"/></p>
+    <input type='hidden' name='_button_name'>
+</form>
+
+<hr>
+<p>FORM9 / #form9</p>
+
+<form name='post_echo9' action='post_echo.cgi' method='post' enctype='multipart/form-data' id="form9">
+</form>
+
+<p>File: <input type="file" name="fileToUpload9" id="fileToUpload9" form="form9"></p>
+
+<p>Name: <input type='text' name='name9' form="form9"/></p>
+
+<p><input name='Submit' type='submit' value='Submit' class='ok' form="form9" id="submit9"/></p>
+<input type='hidden' name='_button_name' form="form9">
+
+
+<hr>
+<H3>Tests must be run on webserver!!!</H3>
+
+<script src='try_form-data.js'></script>
+
+</body>
+</html>

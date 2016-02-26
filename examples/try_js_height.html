@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+    <title>Page with hiperlink that is loaded into frame</title>
+    <link rel="stylesheet" href="css/styles.css" type="text/css"/>
+    <script type="text/javascript" src='js/jquery-2.1.1.js'></script>
+
+    <script type="text/javascript" src='js/jquery.debugLogger.js'></script>
+    <script type="text/javascript">
+        if (typeof DEBUG_LOGGER === "object") {
+            DEBUG_LOGGER.init({remote_log: 0, log_level: 0});
+        }
+    </script>
+
+    <script type="text/javascript" src='js/web.reloader.js'></script>
+    <script type="text/javascript" src='try_js_height.js'></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            WEB_RELOADER.initModule();
+        });
+    </script>
+
+    <style>
+        #container {
+            height:120px;
+            overflow: hidden;
+            /*float:left;*/
+            padding:0;
+        }
+    </style>
+</head>
+<body>
+
+<h3>Page with hiperlink that is loaded into frame</h3>
+
+<p><a href="try_js_height_frame1.html" data-frame="container">load frame1 in container</a></p>
+<p><a href="try_js_height_frame2.html" data-frame="container">load frame2 in container (frame2 itself loads frame1)</a></p>
+
+<div class="r_frame" id="container" data-onload="onload_height"></div>
+
+
+
+</body>
+</html>
