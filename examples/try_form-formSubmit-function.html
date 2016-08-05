@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+
+    <title>formSubmit function</title>
+
+    <link rel="stylesheet" href="css/styles.css" type="text/css"/>
+
+    <script src='js/jquery-2.1.3.js'></script>
+
+    <script type="text/javascript" src='js/jquery.debugLogger.js'></script>
+    <script type="text/javascript">
+        if (typeof DEBUG_LOGGER === "object") {
+            DEBUG_LOGGER.init({remote_log: 0, log_level: 6});
+        }
+    </script>
+
+    <script src='js/web.reloader.js'></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            WEB_RELOADER.initModule();
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#formSubmitter1').click(function(){
+                console.log("formSubmitter1: click");
+                $(':input[name="name"]').val('formSubmitter1 clicked');
+                var id = $('form').attr('id');
+                console.log('id=' + id);
+                WEB_RELOADER.submitForm(id);
+                return false;
+            });
+            $('#formSubmitter2').click(function(){
+                console.log("formSubmitter2: click");
+                $(':input[name="name"]').val('formSubmitter2 clicked');
+                var f = $('form')[0];
+                console.log(f);
+                WEB_RELOADER.submitForm(f);
+                return false;
+            });
+        });
+    </script>
+</head>
+
+<body>
+
+    <H1>formSubmit function</H1>
+
+    <div id="container" class="r_frame r_load_me" data-url="test_form.cgi"></div>
+
+    <ul>
+        <li>
+            <a href="#" id="formSubmitter1">Trigger formSubmit function with id</a>
+        </li>
+        <li>
+            <a href="#" id="formSubmitter2">Trigger formSubmit function with element</a>
+        </li>
+    </ul>
+
+    <H3>Tests must be run on webserver!!!</H3>
+
+</body>
+
+</html>

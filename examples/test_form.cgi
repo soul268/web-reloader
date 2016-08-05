@@ -23,7 +23,7 @@ if ( @params > 0 )
 }
 
 my $name = $q->param( 'name' );
-$text .= "<form name='test_form' action='test_form.cgi' method='post'>\n";
+$text .= "<form name='test_form' action='test_form.cgi' method='post' id='testFormId'>\n";
 $text .= "<p>Name: <input type='text' name='name' value='$name'></p>\n";
 $text .= "<p>Image: <input name='gopher' type='image' src='img/gopher_icon_128.png' alt='Gopher'></p>\n";
 $text .= "<p><input name='Submit' type='submit' value='Submit' class='ok'></p>\n";

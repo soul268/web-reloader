@@ -1,6 +1,6 @@
 # NAME
 
-WebReloader is JavaScript library that loads parts of web page via ajax.
+WebReloader is JavaScript library that loads parts of web page.
 
 # DOCUMENTATION
 

@@ -45,6 +45,7 @@
                     <li><a href="#stealform">"Stealing" form button</a></li>
                     <li><a href="#formredirect">Form result redirection to another frame</a></li>
                     <li><a href="#formsubmit5">Form submit html5</a></li>
+                    <li><a href="#submitForm_function">function WEB_RELOADER.submitForm</a></li>
                 </ul>
             </li>
             <li>
@@ -101,6 +102,7 @@
     <div class="section">
 
         <ul>
+            <li><b>v 1.0.15</b> 2016-08-05 - change WEB_RELOADER.submitForm to accept HTMLFormElement as first argument in addition to formId</li>
             <li><b>v 1.0.14</b> 2016-02-17 - feature: method reloadFrame - reloads frame from last url</li>
             <li><b>v 1.0.13</b> 2016-02-12 - feature: link(a) skip-frame - load link to n-th parent frame; add ToC to documentation</li>
             <li><b>v 1.0.12</b> 2016-01-27 - fix: remove dependency on id for loading A in containing frame</li>
@@ -542,6 +544,26 @@
     </script>
 
     <p>Useful for forms spanning large pages that may intersect with other forms loaded later.</p>
+</div>
+
+<a href="#toc">TOC</a>
+
+<a name="submitForm_function"></a>
+
+<h5>public function WEB_RELOADER.submitForm - submits the form.</h5>
+
+<div class="section">
+    <p>Function submitForm can be used to submit form from js code.</p>
+
+    <pre class="brush: js">
+        WEB_RELOADER.submitForm( 'formId' ); # string containing form id
+        WEB_RELOADER.submitForm( element );  # object containging HTMLFormElement ( e.g. $('form')[0] )
+
+        # optional second parameter containing id of element
+        # that is hidden [overlayDiv.style.display = 'none']
+        # when frame load is finished loading
+        WEB_RELOADER.submitForm( 'formId', 'overlayId' );
+    </pre>
 </div>
 
 <a href="#toc">TOC</a>

@@ -2,10 +2,10 @@
  * WEB_RELOADER
  * Library (re)loading page fragments with ajax requests
  * web.reloader.js
- * version 1.0.14
+ * version 1.0.15
  *
  * Author: Alexander Dimitrov soul268@gmail.com
- * Date 2016-02-17
+ * Date 2016-08-05
  */
 
 /*jslint
@@ -42,8 +42,8 @@ var WEB_RELOADER = (function ($) {
   };
 
   var configMap = {
-    v: "1.0.14",
-    d: "2016-02-17",
+    v: "1.0.15",
+    d: "2016-08-05",
 
     /* selector expressions */
     frameSelectorStr: '.r_frame',
@@ -926,18 +926,24 @@ var WEB_RELOADER = (function ($) {
   // End PUBLIC method /loadFrames/
 
   // Begin Public method /submitForm/
-  function submitForm(formId, divId) {
-    log.trace('::submitForm formId=[' + formId + '] divId=[' + divId + ']');
-    var $overlayDiv = $('#' + divId);
+  function submitForm(formIdOrFormElement, divId) {
+    log.trace('::submitForm formId=[' + formIdOrFormElement + '] divId=[' + divId + '] typeof formId=[' + (typeof formIdOrFormElement) + ']');
 
-    if (typeof formId !== 'string' || formId.length === 0) {
-      log.error('ERROR: invalid formId!');
-      return false;
+    var $overlayDiv = $('#' + divId);
+    var $form;
+
+    if (formIdOrFormElement instanceof HTMLFormElement) {
+      $form = $(formIdOrFormElement);
+    } else {
+      if (typeof formIdOrFormElement !== 'string' || formIdOrFormElement.length === 0) {
+        log.error('ERROR: invalid formId!');
+        return false;
+      }
+      $form = $('#' + formIdOrFormElement);
     }
 
-    var $form = $('#' + formId);
     if ($form.length !== 1) {
-      log.error('ERROR: form not found! id=[' + formId + ']');
+      log.error('ERROR: form not found! id=[' + formIdOrFormElement + ']');
       return false;
     }
 

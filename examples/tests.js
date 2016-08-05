@@ -648,6 +648,72 @@
     $fixture.find(':submit[name=Submit]').trigger('click');
   });
 
+  asyncTest("formSubmit function (with first parameter id)", function () {
+    expect(1);
+
+    $fixture.html(
+      "<div class='r_frame' id='container'>" +
+      "  <form name='test_form' action='post_echo.cgi' method='post' id='test_form'>" +
+      "    <input type='hidden' name='_button_name' value='testVal'/>" +
+      "  </form>" +
+      "</div>" +
+      "<p>Name: <input type='text' name='name' value='' form='test_form'></p>"
+    );
+
+    $(document).one('ajaxStop', function () {
+      var expectedValues = [
+        '_button_name=testVal',
+        'name=123'
+      ];
+
+      $fixture.find('#container').find('li').each(function () {
+        removeStringFromArray($(this).text(), expectedValues);
+      });
+      equal(
+        expectedValues.length,
+        0,
+        expectedValues.length === 0 ? 'all expected post values found' : 'values missing in POST ' + expectedValues
+      );
+
+      start();
+    });
+    $fixture.find(':input[name=name]').val('123');
+    WEB_RELOADER.submitForm('test_form');
+  });
+
+  asyncTest("formSubmit function (with first parameter HTMLFormElement)", function () {
+    expect(1);
+
+    $fixture.html(
+      "<div class='r_frame' id='container'>" +
+      "  <form name='test_form' action='post_echo.cgi' method='post' id='test_form'>" +
+      "    <input type='hidden' name='_button_name' value='testVal'/>" +
+      "  </form>" +
+      "</div>" +
+      "<p>Name: <input type='text' name='name' value='' form='test_form'></p>"
+    );
+
+    $(document).one('ajaxStop', function () {
+      var expectedValues = [
+        '_button_name=testVal',
+        'name=123'
+      ];
+
+      $fixture.find('#container').find('li').each(function () {
+        removeStringFromArray($(this).text(), expectedValues);
+      });
+      equal(
+        expectedValues.length,
+        0,
+        expectedValues.length === 0 ? 'all expected post values found' : 'values missing in POST ' + expectedValues
+      );
+
+      start();
+    });
+    $fixture.find(':input[name=name]').val('123');
+    WEB_RELOADER.submitForm($('form')[0]);
+  });
+
 
   module("REPLACE MYSELF FUNCTION");
 
